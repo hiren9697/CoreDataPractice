@@ -18,4 +18,17 @@ public class Passport: NSManagedObject {
         formatter.dateFormat = "dd-MM-yyyy"
         return formatter.string(from: dateOfIssue)
     }
+    var displayIDText: String {
+        "ID: \(id)"
+    }
+    var displayDateOfIssue: String {
+        "Date of issue: \(formattedDate)"
+    }
+    var displayEmployeeText: String {
+        if let toEmployee = toEmployee {
+            return "Employee: \(toEmployee.name)"
+        } else {
+            return "Employee: -"
+        }
+    }
 }

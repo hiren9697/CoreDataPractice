@@ -8,7 +8,15 @@
 import UIKit
 
 class CreatePassportFormVC: UIViewController {
+    // Data model
+    struct PassportFormData {
+        let passportID: String
+        let dateOfIssue: Date
+        let selectedEmployee: Employee?
+    }
+    typealias Completion = (PassportFormData) -> Void
     
+    // UI components
     weak var passportIDTF: UITextField?
     weak var datePickerTF: UITextField?
     weak var employeeTF: UITextField?
@@ -20,10 +28,14 @@ class CreatePassportFormVC: UIViewController {
         return picker
     }()
     
+    // Variables to save entered data
     var employees: [Employee]?
     var enteredPassportID: String?
     var selectedDateOfIssue: Date?
     var selectedEmployee: Employee?
+    
+    // Completion handler to pass data on click of `Save` button
+    var completionHandler: Completion?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,13 +86,17 @@ extension CreatePassportFormVC {
         }
         
         // 4. Add a "Save" action
-        let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
-            guard let textField = alert.textFields?.first,
-                  let departmentName = textField.text,
-                  !departmentName.isEmpty else {
+        let saveAction = UIAlertAction(title: "Save", style: .default) {[weak self] _ in
+            guard let strongSelf = self,
+                  let enteredPassportID = strongSelf.enteredPassportID,
+                  let selectedDateOfIssue = strongSelf.selectedDateOfIssue else {
                 print("Passport ID name is empty")
                 return
             }
+            let formData = PassportFormData(passportID: enteredPassportID,
+                                            dateOfIssue: selectedDateOfIssue,
+                                            selectedEmployee: strongSelf.selectedEmployee)
+            strongSelf.completionHandler?(formData)
         }
         self.saveButton = saveAction
         saveAction.isEnabled = false
@@ -127,7 +143,9 @@ extension CreatePassportFormVC {
     @objc func selectEmployeeDoneAction() {
         employeeTF?.resignFirstResponder()
     }
-    
+   
+    /// Handles date changes in date picker
+    /// Updates `selectionDateOfIssue` and text in `datePickerTF`
     @objc func dateChanged(_ sender: UIDatePicker) {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
@@ -137,11 +155,13 @@ extension CreatePassportFormVC {
         updateSaveButtonStatus()
     }
     
+    /// Handles text changes in passport ID text field
     @objc func handlePassportIDEditingChange(_ textField: UITextField) {
         enteredPassportID = textField.text
         updateSaveButtonStatus()
     }
     
+    /// Enable or disable save button based on selected issue date and passport ID
     private func updateSaveButtonStatus() {
         guard let enteredPassportID = enteredPassportID,
               let _ = selectedDateOfIssue else {

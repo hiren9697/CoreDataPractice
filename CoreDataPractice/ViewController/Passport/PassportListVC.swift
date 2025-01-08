@@ -29,6 +29,10 @@ extension PassportListVC {
             return
         }
         createPassportFormVC.modalPresentationStyle = .overFullScreen
+        createPassportFormVC.completionHandler = {[weak self] formData in
+            guard let strongSelf = self else { return }
+            strongSelf.savePassport(id: formData.passportID, dateOfIssue: formData.dateOfIssue, employee: formData.selectedEmployee)
+        }
         present(createPassportFormVC, animated: false , completion: nil)
     }
 }
@@ -65,11 +69,13 @@ extension PassportListVC {
         }
     }
     
-    private func savePassport(withID id: String, date: Date) {
-//        let department = Department(context: PersistentStorage.shared.context)
-//        department.name = name
-//        PersistentStorage.shared.saveContext()
-//        refreshDepartmentList()
+    private func savePassport(id: String, dateOfIssue: Date, employee: Employee?) {
+        let passport = Passport(context: PersistentStorage.shared.context)
+        passport.id = id
+        passport.dateOfIssue = dateOfIssue
+        passport.toEmployee = employee
+        PersistentStorage.shared.saveContext()
+        refreshPassportList()
     }
 }
 
@@ -89,7 +95,7 @@ extension PassportListVC: UITableViewDataSource {
 // MARK: - TableView Delegate
 extension PassportListVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        50
+        UITableView.automaticDimension
     }
 }
 
