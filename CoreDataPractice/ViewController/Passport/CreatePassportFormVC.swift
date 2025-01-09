@@ -97,6 +97,7 @@ extension CreatePassportFormVC {
                                             dateOfIssue: selectedDateOfIssue,
                                             selectedEmployee: strongSelf.selectedEmployee)
             strongSelf.completionHandler?(formData)
+            strongSelf.dismiss(animated: true)
         }
         self.saveButton = saveAction
         saveAction.isEnabled = false
