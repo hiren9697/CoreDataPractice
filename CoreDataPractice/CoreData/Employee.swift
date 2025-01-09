@@ -20,6 +20,17 @@ import CoreData
 public class Employee: NSManagedObject {
     @NSManaged public var name: String
     @NSManaged public var toPassport: Passport?
+    
+    var displayNameText: String {
+        "Name: \(name)"
+    }
+    var passportIDText: String {
+        "Passport ID: \(toPassport?.id ?? "-")"
+    }
+    var departmentText: String {
+        // "Department: \(toPassport?.department ?? "-")"
+        "Dapartment: -"
+    }
 }
 
 

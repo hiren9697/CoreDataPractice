@@ -10,8 +10,12 @@ import CoreData
 
 class EmployeeTC: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
-    
+    @IBOutlet weak var passportLabel: UILabel!
+    @IBOutlet weak var departmentLabel: UILabel!
+
     func updateData(_ employee: Employee) {
-        nameLabel.text = employee.name
+        nameLabel.text = employee.displayNameText
+        passportLabel.text = employee.passportIDText
+        departmentLabel.text = employee.departmentText
     }
 }

@@ -107,7 +107,7 @@ extension ViewController: UITableViewDataSource {
 // MARK: - TableView Delegate
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        50
+        UITableView.automaticDimension
     }
 }
 
