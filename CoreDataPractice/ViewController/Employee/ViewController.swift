@@ -73,11 +73,7 @@ extension ViewController {
 // MARK: - Database helper
 extension ViewController {
     func fetchEmployees() -> [Employee]? {
-        /*
-        // Go to this path in finder and in 'Library/Application Support' you will fild sqlite file of core data
-        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        print(path.first!)
-         */
+        
         // Define the fetch request
         let repository = EmployeeRepository()
         return repository.fetchEmployees()
