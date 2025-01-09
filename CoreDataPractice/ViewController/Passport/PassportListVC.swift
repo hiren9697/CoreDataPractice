@@ -52,7 +52,7 @@ extension PassportListVC {
 
 // MARK: - Database helper
 extension PassportListVC {
-    func fetchPassports() -> [Passport]? {
+    private func fetchPassports() -> [Passport]? {
         // Define the fetch request
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Passport")
         do {
@@ -77,6 +77,14 @@ extension PassportListVC {
         PersistentStorage.shared.saveContext()
         refreshPassportList()
     }
+    
+    private func deletePassport(at indexPath: IndexPath) {
+        let passportToDelete = passports[indexPath.row]
+        PersistentStorage.shared.context.delete(passportToDelete)
+        PersistentStorage.shared.saveContext()
+        passports.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
 }
 
 // MARK: - TableView DataSource
@@ -96,6 +104,28 @@ extension PassportListVC: UITableViewDataSource {
 extension PassportListVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // Delete Action
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completionHandler in
+            guard let strongSelf = self else { return }
+            strongSelf.deletePassport(at: indexPath)
+            completionHandler(true) // Indicate the action was performed
+        }
+        deleteAction.backgroundColor = .red
+        
+        // Edit Action
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { [weak self] _, _, completionHandler in
+            guard let strongSelf = self else { return }
+            completionHandler(true)
+        }
+        editAction.backgroundColor = .systemBlue
+        
+        // Combine Actions
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction, editAction])
+        configuration.performsFirstActionWithFullSwipe = false // Prevent full swipe
+        return configuration
     }
 }
 
