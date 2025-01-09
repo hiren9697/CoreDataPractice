@@ -24,16 +24,7 @@ class PassportListVC: ParentVC {
 // MARK: - IBAction
 extension PassportListVC {
     @IBAction func btnAddTap() {
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        guard let createPassportFormVC = mainStoryboard.instantiateViewController(withIdentifier: "CreatePassportFormVC") as? CreatePassportFormVC else {
-            return
-        }
-        createPassportFormVC.modalPresentationStyle = .overFullScreen
-        createPassportFormVC.completionHandler = {[weak self] formData in
-            guard let strongSelf = self else { return }
-            strongSelf.savePassport(id: formData.passportID, dateOfIssue: formData.dateOfIssue, employee: formData.selectedEmployee)
-        }
-        present(createPassportFormVC, animated: false , completion: nil)
+        presentFormVC(editPassport: nil)
     }
 }
 
@@ -47,6 +38,35 @@ extension PassportListVC {
     private func refreshPassportList() {
         passports = fetchPassports() ?? []
         tableView.reloadData()
+    }
+    
+    private func presentFormVC(editPassport: Passport?) {
+        let mode: CreatePassportFormVC.Mode
+        if let editPassport = editPassport {
+            mode = .edit(editPassport)
+        } else {
+            mode = .create
+        }
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        guard let createPassportFormVC = mainStoryboard.instantiateViewController(withIdentifier: "CreatePassportFormVC") as? CreatePassportFormVC else {
+            return
+        }
+        createPassportFormVC.modalPresentationStyle = .overFullScreen
+        createPassportFormVC.mode = mode
+        createPassportFormVC.completionHandler = {[weak self] (mode, formData) in
+            guard let strongSelf = self else { return }
+            switch mode {
+            case .create:
+                strongSelf.savePassport(id: formData.passportID, dateOfIssue: formData.dateOfIssue, employee: formData.selectedEmployee)
+            case .edit(let passport):
+                strongSelf.editPassport(existingPassportObject: passport,
+                                        newID: formData.passportID,
+                                        newDateOfIssue: formData.dateOfIssue,
+                                        newEmployee: formData.selectedEmployee)
+            }
+        }
+        present(createPassportFormVC, animated: false , completion: nil)
     }
 }
 
@@ -74,6 +94,17 @@ extension PassportListVC {
         passport.id = id
         passport.dateOfIssue = dateOfIssue
         passport.toEmployee = employee
+        PersistentStorage.shared.saveContext()
+        refreshPassportList()
+    }
+    
+    private func editPassport(existingPassportObject: Passport,
+                              newID: String,
+                              newDateOfIssue: Date,
+                              newEmployee: Employee?) {
+        existingPassportObject.id = newID
+        existingPassportObject.dateOfIssue = newDateOfIssue
+        existingPassportObject.toEmployee = newEmployee
         PersistentStorage.shared.saveContext()
         refreshPassportList()
     }
@@ -118,6 +149,7 @@ extension PassportListVC: UITableViewDelegate {
         // Edit Action
         let editAction = UIContextualAction(style: .normal, title: "Edit") { [weak self] _, _, completionHandler in
             guard let strongSelf = self else { return }
+            strongSelf.presentFormVC(editPassport: strongSelf.passports[indexPath.row])
             completionHandler(true)
         }
         editAction.backgroundColor = .systemBlue

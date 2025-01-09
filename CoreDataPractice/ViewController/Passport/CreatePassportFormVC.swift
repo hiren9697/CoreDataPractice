@@ -9,12 +9,16 @@ import UIKit
 
 class CreatePassportFormVC: UIViewController {
     // Data model
+    enum Mode {
+        case create
+        case edit(Passport)
+    }
     struct PassportFormData {
         let passportID: String
         let dateOfIssue: Date
         let selectedEmployee: Employee?
     }
-    typealias Completion = (PassportFormData) -> Void
+    typealias Completion = (_ mode: Mode, _ data: PassportFormData) -> Void
     
     // UI components
     weak var passportIDTF: UITextField?
@@ -35,6 +39,7 @@ class CreatePassportFormVC: UIViewController {
     var selectedEmployee: Employee?
     
     // Completion handler to pass data on click of `Save` button
+    var mode: Mode!
     var completionHandler: Completion?
     
     override func viewDidLoad() {
@@ -48,6 +53,7 @@ class CreatePassportFormVC: UIViewController {
     }
 }
 
+// MARK: - Alert
 extension CreatePassportFormVC {
     private func presentAddPassportAlert() {
         let alert = UIAlertController(title: "Add Passport", message: "Enter the details of the passport to save.", preferredStyle: .alert)
@@ -60,6 +66,9 @@ extension CreatePassportFormVC {
             textField.addTarget(strongSelf, action: #selector(strongSelf.handlePassportIDEditingChange(_:)), for: .editingChanged)
             textField.placeholder = "Passport ID"
             textField.returnKeyType = .next
+            if case let .edit(existingPassport) = strongSelf.mode {
+                textField.text = existingPassport.id
+            }
         }
         
         // 2. Add a text field to the alert for selecting date of issue
@@ -73,8 +82,11 @@ extension CreatePassportFormVC {
             datePicker.preferredDatePickerStyle = .wheels
             datePicker.maximumDate = Date()
             datePicker.addTarget(strongSelf, action: #selector(strongSelf.dateChanged), for: .valueChanged)
-            
             textField.inputView = datePicker
+            if case let .edit(existingPassport) = strongSelf.mode {
+                datePicker.date = existingPassport.dateOfIssue
+                strongSelf.dateChanged(datePicker)
+            }
         }
         
         // 3. Add a text field to select person
@@ -84,6 +96,13 @@ extension CreatePassportFormVC {
             textField.placeholder = "Select Employee (Optional)"
             textField.inputView = strongSelf.employeePicker
             strongSelf.addToolbarWithDoneButton(to: textField)
+            if case let .edit(existingPassport) = strongSelf.mode,
+               let existingEmployee = existingPassport.toEmployee {
+                if let currentEmployeeIndex = strongSelf.employees?.firstIndex(of: existingEmployee) {
+                    strongSelf.employeePicker.selectRow(currentEmployeeIndex, inComponent: 0, animated: false)
+                    textField.text = existingEmployee.name
+                }
+            }
         }
         
         // 4. Add a "Save" action
@@ -97,7 +116,7 @@ extension CreatePassportFormVC {
             let formData = PassportFormData(passportID: enteredPassportID,
                                             dateOfIssue: selectedDateOfIssue,
                                             selectedEmployee: strongSelf.selectedEmployee)
-            strongSelf.completionHandler?(formData)
+            strongSelf.completionHandler?(strongSelf.mode, formData)
             strongSelf.dismiss(animated: true)
         }
         self.saveButton = saveAction
