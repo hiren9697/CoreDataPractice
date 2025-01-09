@@ -140,14 +140,24 @@ extension CreatePassportFormVC {
     func addToolbarWithDoneButton(to textField: UITextField) {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(selectEmployeeCancelAction))
         let nextButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(selectEmployeeDoneAction))
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolbar.items = [flexibleSpace, nextButton]
+        toolbar.items = [cancelButton, flexibleSpace, nextButton]
         textField.inputAccessoryView = toolbar
     }
     
     /// Action for `Done` button in toolbar of text field `Select Employee`
     @objc func selectEmployeeDoneAction() {
+        if let pickerView = employeeTF?.inputView as? UIPickerView {
+            employeeTF?.text = employees?[pickerView.selectedRow(inComponent: 0)].name
+            selectedEmployee = employees?[pickerView.selectedRow(inComponent: 0)]
+        }
+        employeeTF?.resignFirstResponder()
+    }
+    
+    /// Action for `Cancel` button in toolbar of text field `Select Employee`
+    @objc func selectEmployeeCancelAction() {
         employeeTF?.resignFirstResponder()
     }
    
@@ -201,10 +211,5 @@ extension CreatePassportFormVC: UIPickerViewDataSource {
 extension CreatePassportFormVC: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         employees?[row].name
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        employeeTF?.text = employees?[row].name
-        selectedEmployee = employees?[row]
     }
 }
