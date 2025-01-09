@@ -71,6 +71,7 @@ extension CreatePassportFormVC {
             let datePicker = UIDatePicker()
             datePicker.datePickerMode = .date
             datePicker.preferredDatePickerStyle = .wheels
+            datePicker.maximumDate = Date()
             datePicker.addTarget(strongSelf, action: #selector(strongSelf.dateChanged), for: .valueChanged)
             
             textField.inputView = datePicker
@@ -126,6 +127,11 @@ extension CreatePassportFormVC {
 
     /// Action for `Next` button in toolbar of text field `Date of Issue`
     @objc func dateOffIssueNextAction() {
+        if selectedDateOfIssue == nil {
+            if let datePicker = datePickerTF?.inputView as? UIDatePicker {
+                dateChanged(datePicker)
+            }
+        }
         employeeTF?.becomeFirstResponder()
     }
     
