@@ -11,9 +11,11 @@ import CoreData
 class PassportTC: UITableViewCell {
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var dateOfIssueLabel: UILabel!
+    @IBOutlet weak var employeeNameLabel: UILabel!
 
     func updateData(_ passport: Passport) {
-        idLabel.text = passport.id
-        dateOfIssueLabel.text = passport.formattedDate
+        idLabel.text = passport.displayIDText
+        dateOfIssueLabel.text = passport.displayDateOfIssue
+        employeeNameLabel.text = passport.displayEmployeeText
     }
 }
