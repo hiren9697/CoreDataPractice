@@ -95,6 +95,14 @@ extension DepartmentListVC {
         PersistentStorage.shared.saveContext()
         refreshDepartmentList()
     }
+    
+    private func deleteDepartment(at indexPath: IndexPath) {
+        let departmentToDelete = departments[indexPath.row]
+        PersistentStorage.shared.context.delete(departmentToDelete)
+        PersistentStorage.shared.saveContext()
+        departments.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
 }
 
 // MARK: - TableView DataSource
@@ -114,6 +122,21 @@ extension DepartmentListVC: UITableViewDataSource {
 extension DepartmentListVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         50
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // Delete Action
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completionHandler in
+            guard let strongSelf = self else { return }
+            strongSelf.deleteDepartment(at: indexPath)
+            completionHandler(true) // Indicate the action was performed
+        }
+        deleteAction.backgroundColor = .red
+        
+        // Combine Actions
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        configuration.performsFirstActionWithFullSwipe = false // Prevent full swipe
+        return configuration
     }
 }
 
