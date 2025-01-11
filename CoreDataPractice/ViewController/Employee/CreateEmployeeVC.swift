@@ -36,6 +36,7 @@ class CreateEmployeeVC: UIViewController {
             tfPassport.text = selectedPassport?.id
         }
     }
+    var completion: (() -> Void)!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +49,16 @@ class CreateEmployeeVC: UIViewController {
 // MARK: - IBAction
 extension CreateEmployeeVC {
     @IBAction func btnSaveTapped(_ sender: Any) {
-        
+        guard let profilePictureData = selectedProfilePicture?.jpegData(compressionQuality: 0.5),
+        let department = selectedDepartment else { return }
+        let employee = Employee(context: PersistentStorage.shared.context)
+        employee.profilePicture = profilePictureData
+        employee.name = tfName.text!
+        employee.toDepartment = department
+        employee.toPassport = selectedPassport
+        PersistentStorage.shared.saveContext()
+        completion()
+        dismiss(animated: true)
     }
     
     @IBAction func btnProfilePictureTapped(_ sender: Any) {

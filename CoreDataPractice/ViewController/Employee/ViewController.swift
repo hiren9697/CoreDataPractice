@@ -27,6 +27,9 @@ extension ViewController {
         // presentAddEmployeeAlert()
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let createEmployeeVC = mainStoryboard.instantiateViewController(withIdentifier: "CreateEmployeeVC") as! CreateEmployeeVC
+        createEmployeeVC.completion = {[weak self] in
+            self?.refreshEmployeeList()
+        }
         present(createEmployeeVC, animated: true)
     }
 }

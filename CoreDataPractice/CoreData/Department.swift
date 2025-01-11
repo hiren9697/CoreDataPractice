@@ -10,4 +10,5 @@ import CoreData
 @objc(Department)
 public class Department: NSManagedObject {
     @NSManaged public var name: String
+    @NSManaged public var toEmployees: [Employee]
 }
