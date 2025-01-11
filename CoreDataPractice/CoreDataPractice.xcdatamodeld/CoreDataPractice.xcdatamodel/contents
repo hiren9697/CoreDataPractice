@@ -2,9 +2,12 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="24C101" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Department" representedClassName="Department" syncable="YES">
         <attribute name="name" attributeType="String"/>
+        <relationship name="toEmployees" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Employee" inverseName="toDepartment" inverseEntity="Employee"/>
     </entity>
     <entity name="Employee" representedClassName="Employee" syncable="YES">
         <attribute name="name" attributeType="String"/>
+        <attribute name="profilePicture" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <relationship name="toDepartment" maxCount="1" deletionRule="Nullify" destinationEntity="Department" inverseName="toEmployees" inverseEntity="Department"/>
         <relationship name="toPassport" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Passport" inverseName="toEmployee" inverseEntity="Passport"/>
     </entity>
     <entity name="Passport" representedClassName="Passport" syncable="YES">

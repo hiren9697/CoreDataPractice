@@ -9,11 +9,13 @@ import UIKit
 import CoreData
 
 class EmployeeTC: UITableViewCell {
+    @IBOutlet weak var profilePicture: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var passportLabel: UILabel!
     @IBOutlet weak var departmentLabel: UILabel!
 
     func updateData(_ employee: Employee) {
+        profilePicture.image = employee.profilePictureImage
         nameLabel.text = employee.displayNameText
         passportLabel.text = employee.passportIDText
         departmentLabel.text = employee.departmentText

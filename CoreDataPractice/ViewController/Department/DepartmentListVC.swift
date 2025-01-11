@@ -73,20 +73,7 @@ extension DepartmentListVC {
 // MARK: - Database helper
 extension DepartmentListVC {
     func fetchDepartments() -> [Department]? {
-        // Define the fetch request
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Department")
-        do {
-            // Execute the fetch request
-            let nsManagedObjects = try PersistentStorage.shared.context.fetch(fetchRequest)
-            guard let departments = nsManagedObjects as? [Department] else {
-                print("Could not cast managed objects to department")
-                return nil
-            }
-            return departments
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-            return nil
-        }
+        DepartmentRepository().fetchDepartments()
     }
     
     private func saveDepartment(withName name: String) {
