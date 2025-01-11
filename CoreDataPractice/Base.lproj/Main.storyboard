@@ -73,10 +73,10 @@
             </objects>
             <point key="canvasLocation" x="-428" y="879"/>
         </scene>
-        <!--View Controller-->
+        <!--Create EmployeeVC-->
         <scene sceneID="apT-Tf-QKg">
             <objects>
-                <viewController id="Ax5-3Z-O7y" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CreateEmployeeVC" id="Ax5-3Z-O7y" customClass="CreateEmployeeVC" customModule="CoreDataPractice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tDk-Wd-ZWG">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -88,6 +88,9 @@
                                         <rect key="frame" x="312" y="5" width="61" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Save"/>
+                                        <connections>
+                                            <action selector="btnSaveTapped:" destination="Ax5-3Z-O7y" eventType="touchUpInside" id="BxN-PW-iVF"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -119,13 +122,16 @@
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5hu-y5-B8z">
                                                                         <rect key="frame" x="141.66666666666666" y="10" width="110" height="110"/>
                                                                         <subviews>
-                                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gbX-8A-Rky">
+                                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gbX-8A-Rky">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
                                                                             </imageView>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RAY-TH-3gr">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
                                                                                 <state key="normal" title="Button"/>
                                                                                 <buttonConfiguration key="configuration" style="plain"/>
+                                                                                <connections>
+                                                                                    <action selector="btnProfilePictureTapped:" destination="Ax5-3Z-O7y" eventType="touchUpInside" id="Uer-yf-Tdq"/>
+                                                                                </connections>
                                                                             </button>
                                                                         </subviews>
                                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -157,6 +163,9 @@
                                                                         <rect key="frame" x="20" y="10" width="353" height="40"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="next" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                                                        <connections>
+                                                                            <outlet property="delegate" destination="Ax5-3Z-O7y" id="Jvz-fo-Jzf"/>
+                                                                        </connections>
                                                                     </textField>
                                                                 </subviews>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -175,6 +184,9 @@
                                                                         <rect key="frame" x="20" y="10" width="353" height="40"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                         <textInputTraits key="textInputTraits"/>
+                                                                        <connections>
+                                                                            <outlet property="delegate" destination="Ax5-3Z-O7y" id="vK5-mD-qTc"/>
+                                                                        </connections>
                                                                     </textField>
                                                                 </subviews>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -193,6 +205,9 @@
                                                                         <rect key="frame" x="20" y="10" width="353" height="40"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                         <textInputTraits key="textInputTraits"/>
+                                                                        <connections>
+                                                                            <outlet property="delegate" destination="Ax5-3Z-O7y" id="2Tl-e1-NQN"/>
+                                                                        </connections>
                                                                     </textField>
                                                                 </subviews>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -252,6 +267,14 @@
                             <constraint firstItem="VFd-hK-zs1" firstAttribute="top" secondItem="YOu-L7-nwX" secondAttribute="bottom" id="xJp-sl-h0d"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="btnSave" destination="BxE-xx-hLc" id="mlw-hU-5iE"/>
+                        <outlet property="containerViewProfilePicture" destination="5hu-y5-B8z" id="fLZ-wy-c4i"/>
+                        <outlet property="imageViewProfilePicture" destination="gbX-8A-Rky" id="h9N-W9-zrP"/>
+                        <outlet property="tfDepartment" destination="MMC-ve-GJa" id="f3g-tO-9Sb"/>
+                        <outlet property="tfName" destination="u9T-Yr-Zk1" id="GVC-OB-bpJ"/>
+                        <outlet property="tfPassport" destination="7yB-KL-1Sm" id="IQT-1O-yw0"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IuL-zg-gXo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

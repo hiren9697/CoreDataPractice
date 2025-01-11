@@ -155,7 +155,7 @@ extension CreatePassportFormVC {
     }
     
     /// Adds toolbar with done button on `Select Employee` text field
-    /// Next button tap makes `Select Employee` text field first responder
+    /// Done button tap makes `Select Employee` resigns first responder
     func addToolbarWithDoneButton(to textField: UITextField) {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()

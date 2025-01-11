@@ -24,7 +24,10 @@ class ViewController: UIViewController {
 // MARK: - IBAction
 extension ViewController {
     @IBAction func btnAddTap() {
-        presentAddEmployeeAlert()
+        // presentAddEmployeeAlert()
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let createEmployeeVC = mainStoryboard.instantiateViewController(withIdentifier: "CreateEmployeeVC") as! CreateEmployeeVC
+        present(createEmployeeVC, animated: true)
     }
 }
 
