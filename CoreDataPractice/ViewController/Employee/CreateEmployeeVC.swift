@@ -140,6 +140,7 @@ extension CreateEmployeeVC {
 extension CreateEmployeeVC: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if textField == tfDepartment || textField == tfPassport {
+            pickerView.selectRow(0, inComponent: 0, animated: false)
             pickerView.reloadAllComponents()
         }
         return true
