@@ -14,7 +14,6 @@ class CreateEmployeeVC: UIViewController {
     @IBOutlet weak var tfName: UITextField!
     @IBOutlet weak var tfDepartment: UITextField!
     @IBOutlet weak var tfPassport: UITextField!
-    private let pickerView: UIPickerView = UIPickerView()
     private var imagePicker: UIImagePickerController!
     
     var passports: [Passport] = []
@@ -87,10 +86,12 @@ extension CreateEmployeeVC {
         imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         // Picker view
-        pickerView.delegate = self
-        pickerView.dataSource = self
-        tfDepartment.inputView = pickerView
-        tfPassport.inputView = pickerView
+        departmentPicker.delegate = self
+        departmentPicker.dataSource = self
+        tfDepartment.inputView = departmentPicker
+        passportPicker.delegate = self
+        passportPicker.dataSource = self
+        tfPassport.inputView = passportPicker
         // Add toolbar to text fields
         addToolbarWithNextButton(to: tfDepartment)
         addToolbarWithDoneButton(to: tfPassport)
@@ -109,7 +110,7 @@ extension CreateEmployeeVC {
     
     @objc func departmentNextAction() {
         if selectedDepartment == nil {
-            selectedDepartment = departments[pickerView.selectedRow(inComponent: 0)]
+            selectedDepartment = departments[departmentPicker.selectedRow(inComponent: 0)]
         }
         tfPassport.becomeFirstResponder()
     }
@@ -131,7 +132,7 @@ extension CreateEmployeeVC {
     }
     
     @objc func selectPassportDoneAction() {
-        selectedPassport = passports[pickerView.selectedRow(inComponent: 0)]
+        selectedPassport = passports[passportPicker.selectedRow(inComponent: 0)]
         tfPassport.resignFirstResponder()
     }
 }
@@ -139,10 +140,6 @@ extension CreateEmployeeVC {
 // MARK: - TextField Delegate
 extension CreateEmployeeVC: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if textField == tfDepartment || textField == tfPassport {
-            pickerView.selectRow(0, inComponent: 0, animated: false)
-            pickerView.reloadAllComponents()
-        }
         return true
     }
     
@@ -178,9 +175,9 @@ extension CreateEmployeeVC: UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if tfDepartment.isFirstResponder {
+        if pickerView == departmentPicker {
             return departments.count
-        } else if tfPassport.isFirstResponder {
+        } else if pickerView == passportPicker {
             return passports.count
         }
         return 0
@@ -190,16 +187,17 @@ extension CreateEmployeeVC: UIPickerViewDataSource {
 // MARK: - PickerViewDelegate
 extension CreateEmployeeVC: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if tfDepartment.isFirstResponder {
+        if pickerView == departmentPicker {
             return departments[row].name
-        } else if tfPassport.isFirstResponder {
+        } else if pickerView == passportPicker {
             return passports[row].id
+        } else {
+            return "-"
         }
-        return "-"
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if tfDepartment.isFirstResponder {
+        if pickerView == departmentPicker {
             selectedDepartment = departments[row]
         }
     }
