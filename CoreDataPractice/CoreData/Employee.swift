@@ -26,7 +26,6 @@ public class Employee: NSManagedObject {
         "Passport ID: \(toPassport?.id ?? "-")"
     }
     var departmentText: String {
-        // "Department: \(toPassport?.department ?? "-")"
-        "Dapartment: -"
+        "Department: \(toDepartment.name)"
     }
 }
