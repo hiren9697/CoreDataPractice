@@ -8,12 +8,13 @@
 import CoreData
 
 class EmployeeRepository {
+    let coreDataStack: CoreDataStack = CoreDataStack()
     
     func fetchEmployees() -> [Employee]? {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Employee")
         do {
             // Execute the fetch request
-            let nsManagedObjects = try PersistentStorage.shared.context.fetch(fetchRequest)
+            let nsManagedObjects = try coreDataStack.managedObjectContext.fetch(fetchRequest)
             guard let employees = nsManagedObjects as? [Employee] else {
                 print("Could not cast managed objects to employees")
                 return nil

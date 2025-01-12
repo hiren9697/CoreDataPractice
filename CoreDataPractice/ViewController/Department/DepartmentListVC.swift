@@ -12,6 +12,7 @@ import CoreData
 class DepartmentListVC: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
+    let coreDataStack = CoreDataStack()
     var departments: [Department] = []
 
     override func viewDidLoad() {
@@ -77,16 +78,16 @@ extension DepartmentListVC {
     }
     
     private func saveDepartment(withName name: String) {
-        let department = Department(context: PersistentStorage.shared.context)
+        let department = Department(context: coreDataStack.managedObjectContext)
         department.name = name
-        PersistentStorage.shared.saveContext()
+        coreDataStack.saveMainContext()
         refreshDepartmentList()
     }
     
     private func deleteDepartment(at indexPath: IndexPath) {
         let departmentToDelete = departments[indexPath.row]
-        PersistentStorage.shared.context.delete(departmentToDelete)
-        PersistentStorage.shared.saveContext()
+        coreDataStack.managedObjectContext.delete(departmentToDelete)
+        coreDataStack.saveMainContext()
         departments.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .automatic)
     }

@@ -12,6 +12,7 @@ import CoreData
 class PassportListVC: ParentVC {
     @IBOutlet weak var tableView: UITableView!
     
+    let coreDataStack = CoreDataStack()
     var passports: [Passport] = []
 
     override func viewDidLoad() {
@@ -77,11 +78,11 @@ extension PassportListVC {
     }
     
     private func savePassport(id: String, dateOfIssue: Date, employee: Employee?) {
-        let passport = Passport(context: PersistentStorage.shared.context)
+        let passport = Passport(context: coreDataStack.managedObjectContext)
         passport.id = id
         passport.dateOfIssue = dateOfIssue
         passport.toEmployee = employee
-        PersistentStorage.shared.saveContext()
+        coreDataStack.saveMainContext()
         refreshPassportList()
     }
     
@@ -92,14 +93,14 @@ extension PassportListVC {
         existingPassportObject.id = newID
         existingPassportObject.dateOfIssue = newDateOfIssue
         existingPassportObject.toEmployee = newEmployee
-        PersistentStorage.shared.saveContext()
+        coreDataStack.saveMainContext()
         refreshPassportList()
     }
     
     private func deletePassport(at indexPath: IndexPath) {
         let passportToDelete = passports[indexPath.row]
-        PersistentStorage.shared.context.delete(passportToDelete)
-        PersistentStorage.shared.saveContext()
+        coreDataStack.managedObjectContext.delete(passportToDelete)
+        coreDataStack.saveMainContext()
         passports.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .automatic)
     }

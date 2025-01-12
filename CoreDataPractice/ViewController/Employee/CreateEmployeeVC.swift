@@ -16,8 +16,16 @@ class CreateEmployeeVC: UIViewController {
     @IBOutlet weak var tfPassport: UITextField!
     private var imagePicker: UIImagePickerController!
     
+    let coreDataStack = CoreDataStack()
     var passports: [Passport] = []
-    var departments: [Department] = []
+    var departments: [Department] = [] {
+        didSet {
+            print("Department did set: ")
+            for department in departments {
+                print("\(department.name)")
+            }
+        }
+    }
     let departmentPicker = UIPickerView()
     let passportPicker = UIPickerView()
     var selectedProfilePicture: UIImage? {
@@ -50,12 +58,12 @@ extension CreateEmployeeVC {
     @IBAction func btnSaveTapped(_ sender: Any) {
         guard let profilePictureData = selectedProfilePicture?.jpegData(compressionQuality: 0.5),
         let department = selectedDepartment else { return }
-        let employee = Employee(context: PersistentStorage.shared.context)
+        let employee = Employee(context: coreDataStack.managedObjectContext)
         employee.profilePicture = profilePictureData
         employee.name = tfName.text!
         employee.toDepartment = department
         employee.toPassport = selectedPassport
-        PersistentStorage.shared.saveContext()
+        coreDataStack.saveMainContext()
         completion()
         dismiss(animated: true)
     }
@@ -156,11 +164,19 @@ extension CreateEmployeeVC {
     private func fetchDepartments() {
         let repository = DepartmentRepository()
         departments = repository.fetchDepartments() ?? []
+        print("Departments in CreateEmployeeVC")
+        for department in self.departments {
+            print("department: \(department.name)")
+        }
     }
     
     private func fetchPassports() {
         let repository = PassportRepository()
         passports = repository.fetchPassports() ?? []
+        print("Passports in CreateEmployeeVC")
+        for passport in self.passports {
+            print("passport: \(passport.id)")
+        }
     }
 }
 

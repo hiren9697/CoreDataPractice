@@ -12,6 +12,7 @@ import CoreData
 class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
+    let coreDataStack = CoreDataStack()
     var employees: [Employee] = []
 
     override func viewDidLoad() {
@@ -86,9 +87,9 @@ extension ViewController {
     }
     
     private func saveEmployee(withName name: String) {
-        let employee = Employee(context: PersistentStorage.shared.context)
+        let employee = Employee(context: coreDataStack.managedObjectContext)
         employee.name = name
-        PersistentStorage.shared.saveContext()
+        coreDataStack.saveMainContext()
         refreshEmployeeList()
     }
 }
